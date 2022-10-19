@@ -42,7 +42,8 @@ function appendValuesToCurrentInsert(){
 function printInsertsAndResetCounter(){
     printed_anything=0
     if(COUNTER > 0){
-        print FIRST_INSERT;
+        addendum = match(tolower(FIRST_INSERT), " values *$") != 0 ? "" : " VALUES ";
+        print FIRST_INSERT addendum;
         for(c=0;c <= COUNTER;c++){
             finalizer= c + 1 <= COUNTER ? ", " :"; "  ;
             if(length(INSERTS[c]) > 0){
