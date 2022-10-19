@@ -1,0 +1,122 @@
+
+The purpose of this tiny script is just to transform multiple INSERT INTO sql statements,
+the ones you generally get from exporting tables via general database tools like dbeaver,
+so that insertion in a database goes a lot faster.
+It's rudimentary and simple: it splits on different tables and on a limit you set yourself.
+
+The script expects 2 parameters, the first the inputfile, the second the limit per grouping.
+
+Given the following sql file:
+
+    SET SCHEMA MY_SCHEMA;
+    INSERT INTO MY_TABLE (ONE, TWO, THREE) VALUES (1, "TWO", "THREE");
+    commit;
+    INSERT INTO MY_TABLE (ONE, TWO, THREE) VALUES (2, "TWO", "THREE");
+    commit;
+    INSERT INTO MY_TABLE (ONE, TWO, THREE)
+    VALUES (3, "TWO", "THREE");
+    INSERT INTO MY_TABLE
+    (ONE, TWO, THREE) VALUES (4, "TWO", "THREE");
+    INSERT INTO MY_TABLE (ONE, TWO, THREE) VALUES (5, "TWO", "THREE");
+    commit;
+    INSERT INTO MY_TABLE (ONE, TWO, THREE) VALUES (6, "TWO", "THREE");
+
+    INSERT INTO MY_TABLE (ONE, TWO, THREE) VALUES (7, "TWO", "THREE");
+
+
+
+
+    INSERT INTO MY_TABLE (ONE, TWO, THREE) VALUES (8, "TWO", "THREE");
+    commit;
+    INSERT INTO MY_TABLE (ONE, TWO, THREE) VALUES (9, "TWO", "THREE");
+    INSERT INTO MY_TABLE (ONE, TWO, THREE) VALUES (10, "TWO", "THREE");
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES (1, "TWO", "THREE");
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES (2, "TWO", "THREE");
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES (3, "TWO", "THREE");
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES (4, "TWO", "THREE");
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES (5, "TWO", "THREE");
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES (6, "TWO", "THREE");
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES (7, "TWO", "THREE");
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES (8, "TWO", "THREE");
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES (9, "TWO", "THREE");
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES (10, "TWO", "THREE");
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES (11, "TWO", "THREE");
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES (12, "TWO", "THREE");
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES (13, "TWO", "THREE");
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES (14, "TWO", "THREE");
+
+
+
+The following example splits every 50 records or every other TABLE:
+
+    $ ./transformSingleInsertToMultiInsert.sh testFile.sql 50
+    
+    INSERT INTO MY_TABLE (ONE, TWO, THREE) VALUES
+    (1, "TWO", "THREE") ,
+    (2, "TWO", "THREE") ,
+    (3, "TWO", "THREE") ,
+    (4, "TWO", "THREE") ,
+    (5, "TWO", "THREE") ,
+    (6, "TWO", "THREE") ,
+    (7, "TWO", "THREE") ,
+    (8, "TWO", "THREE") ,
+    (9, "TWO", "THREE") ,
+    (10, "TWO", "THREE") ;
+    commit;
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES
+    (1, "TWO", "THREE") ,
+    (2, "TWO", "THREE") ,
+    (3, "TWO", "THREE") ,
+    (4, "TWO", "THREE") ,
+    (5, "TWO", "THREE") ,
+    (6, "TWO", "THREE") ,
+    (7, "TWO", "THREE") ,
+    (8, "TWO", "THREE") ,
+    (9, "TWO", "THREE") ,
+    (10, "TWO", "THREE") ,
+    (11, "TWO", "THREE") ,
+    (12, "TWO", "THREE") ,
+    (13, "TWO", "THREE") ,
+    (14, "TWO", "THREE") ;
+    commit;
+
+
+The following example splits every 6 records or every other TABLE:
+
+    $ ./transformSingleInsertToMultiInsert.sh testFile.sql 6
+    INSERT INTO MY_TABLE (ONE, TWO, THREE) VALUES
+    (1, "TWO", "THREE") ,
+    (2, "TWO", "THREE") ,
+    (3, "TWO", "THREE") ,
+    (4, "TWO", "THREE") ,
+    (5, "TWO", "THREE") ,
+    (6, "TWO", "THREE") ;
+    commit;
+    INSERT INTO MY_TABLE (ONE, TWO, THREE) VALUES
+    (7, "TWO", "THREE") ,
+    (8, "TWO", "THREE") ,
+    (9, "TWO", "THREE") ,
+    (10, "TWO", "THREE") ;
+    commit;
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES
+    (1, "TWO", "THREE") ,
+    (2, "TWO", "THREE") ,
+    (3, "TWO", "THREE") ,
+    (4, "TWO", "THREE") ,
+    (5, "TWO", "THREE") ,
+    (6, "TWO", "THREE") ;
+    commit;
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES
+    (7, "TWO", "THREE") ,
+    (8, "TWO", "THREE") ,
+    (9, "TWO", "THREE") ,
+    (10, "TWO", "THREE") ,
+    (11, "TWO", "THREE") ,
+    (12, "TWO", "THREE") ;
+    commit;
+    INSERT INTO MY_OTHER_TABLE (ONE, TWO, THREE) VALUES
+    (13, "TWO", "THREE") ,
+    (14, "TWO", "THREE") ;
+    commit;
+
+
