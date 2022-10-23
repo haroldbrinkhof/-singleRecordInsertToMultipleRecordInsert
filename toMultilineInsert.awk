@@ -60,9 +60,9 @@ function printInsertsAndResetCounter(){
 
 tolower($0) ~ /^ *insert / {
     if(CURRENT_INSERT != FIRST_INSERT){
+        FIRST_INSERT = CURRENT_INSERT;
         appendValuesToCurrentInsert();
         printInsertsAndResetCounter();
-        FIRST_INSERT = CURRENT_INSERT;
         VALUE_STRING="";
     }
     if(VALUE_STRING != ""){
